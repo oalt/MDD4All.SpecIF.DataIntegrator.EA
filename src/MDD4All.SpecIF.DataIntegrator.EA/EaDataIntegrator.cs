@@ -1,11 +1,9 @@
 ﻿using MDD4All.EnterpriseArchitect.Manipulations;
 using MDD4All.SpecIF.DataIntegrator.Contracts;
 using MDD4All.SpecIF.DataIntegrator.EA.Extensions;
-using MDD4All.SpecIF.DataIntegrator.KafkaListener;
 using MDD4All.SpecIF.DataModels;
 using MDD4All.SpecIF.DataModels.Manipulation;
 using MDD4All.SpecIF.DataProvider.Contracts;
-using MDD4All.SpecIF.DataProvider.WebAPI;
 using System;
 using EAAPI = EA;
 
@@ -19,12 +17,16 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
         private AbstractSpecIfEventListener _specIfEventListener;
 
-        public EaDataIntegrator(EAAPI.Repository repository, ISpecIfMetadataReader metadataReader)
+        private ISpecIfDataReader _specIfDataReader;
+
+        public EaDataIntegrator(EAAPI.Repository repository, ISpecIfMetadataReader metadataReader,
+                                AbstractSpecIfEventListener specIfEventListener,
+                                ISpecIfDataReader specIfDataReader)
         {
             _repository = repository;
             _metadataReader = metadataReader;
-
-            _specIfEventListener = new KafkaSpecIfEventListener();
+            _specIfEventListener = specIfEventListener;
+            _specIfDataReader = specIfDataReader;
 
             _specIfEventListener.SpecIfEventReceived += SpecIfEventReceived;
 
@@ -43,7 +45,7 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
             if (receivedEvent.Class != null && receivedEvent.Class.ID == "RC-SpecIfEvent" && receivedEvent.Class.Revision == "1")
             {
-                string apiURL = receivedEvent.GetPropertyValue("SpecIF:apiURL", _metadataReader);
+                //string apiURL = receivedEvent.GetPropertyValue("SpecIF:apiURL", _metadataReader);
 
                 string resourceID = receivedEvent.GetPropertyValue("SpecIF:id", _metadataReader);
 
@@ -57,9 +59,9 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
                 if (classID == "RC-Requirement")
                 {
-                    SpecIfWebApiDataReader specIfWebApiDataReader = new SpecIfWebApiDataReader(apiURL);
+                    
 
-                    Resource changedResource = specIfWebApiDataReader.GetResourceByKey(new Key
+                    Resource changedResource = _specIfDataReader.GetResourceByKey(new Key
                     {
                         ID = resourceID,
                         Revision = resourceRevision

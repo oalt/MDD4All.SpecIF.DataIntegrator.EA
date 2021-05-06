@@ -4,6 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MDD4All_Github.snk</AssemblyOriginatorKeyFile>
+    <Authors>Dr. Oliver Alt</Authors>
+    <Company>MD4All.de</Company>
+    <Description>SpecIF-based tool data integration for Sparx Enterprise Architect.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>DataIntegrator EA SpecIF</PackageTags>
   </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,7 +18,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MDD4All.SpecIF.DataIntegrator.Contracts" Version="2.0.0.1" />
+      <PackageReference Include="MDD4All.SpecIF.DataIntegrator.Contracts" Version="2.0.1.2" />
       <PackageReference Include="MDD4All.SpecIF.DataProvider.EA" Version="2.0.0.1" />
       <PackageReference Include="MDD4All.SpecIF.DataProvider.Jira" Version="2.0.0.1" />
     </ItemGroup>

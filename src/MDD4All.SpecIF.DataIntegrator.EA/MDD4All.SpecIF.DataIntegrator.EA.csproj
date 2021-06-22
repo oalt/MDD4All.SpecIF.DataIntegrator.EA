@@ -19,8 +19,8 @@
 
     <ItemGroup>
       <PackageReference Include="MDD4All.SpecIF.DataIntegrator.Contracts" Version="2.0.1.2" />
-      <PackageReference Include="MDD4All.SpecIF.DataProvider.EA" Version="2.0.0.1" />
-      <PackageReference Include="MDD4All.SpecIF.DataProvider.Jira" Version="2.0.0.1" />
+      <PackageReference Include="MDD4All.SpecIF.DataProvider.EA" Version="2.1.0.6" />
+      <PackageReference Include="MDD4All.SpecIF.DataProvider.Jira" Version="2.1.0.3" />
     </ItemGroup>
 
   <ItemGroup>

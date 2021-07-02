@@ -21,6 +21,8 @@ namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
 
             string identifier = resource.GetPropertyValue("dcterms:identifier", metadataReader);
 
+            
+
             eaRequirement.Name = title;
 
             eaRequirement.Notes = description;
@@ -44,6 +46,58 @@ namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
                     eaRequirement.SetTaggedValueString("Perspective", "User");
                 }
             }
+
+            string statusId = resource.GetPropertyValue("SpecIF:LifeCycleStatus", metadataReader);
+
+            string eaStatus = "";
+
+            switch(statusId)
+            {
+                case "V-Status-0": // deprecated
+                    eaStatus = "Deprecated";
+                    break;
+
+                case "V-Status-1": // rejected
+                    eaStatus = "Rejected";
+                    break;
+
+                case "V-Status-2": // initial
+                    eaStatus = "";
+                    break;
+
+                case "V-Status-3": // drafted
+                    eaStatus = "Drafted";
+                    break;
+
+                case "V-Status-4": // submitted
+                    eaStatus = "Submitted";
+                    break;
+
+                case "V-Status-5": // approved
+                    eaStatus = "Approved";
+                    break;
+
+                case "V-Status-6": // done
+                    eaStatus = "Completed";
+                    break;
+
+                case "V-Status-9": // validated
+                    eaStatus = "Verified";
+                    break;
+
+                case "V-Status-7": // released
+                    eaStatus = "Released";
+                    break;
+
+                default:
+                    eaStatus = "";
+                    break;
+
+
+            }
+
+            eaRequirement.Status = eaStatus;
+            eaRequirement.Update();
         }
 
         public static void SetProjectDataFromSpecIF(this EAAPI.Package projectPackage,

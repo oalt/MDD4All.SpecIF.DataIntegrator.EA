@@ -37,9 +37,7 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
             if(integrationRootPackage != null)
             {
-                string apiURL = integrationRootPackage.Element.GetTaggedValueString("specifApiUrl");
-
-                if(!string.IsNullOrEmpty(apiURL))
+                if(integrationRootPackage.Element.Stereotype == "specif integration")
                 {
                     List<ProjectDescriptor> projectDescriptors = _specIfDataReader.GetProjectDescriptions();
 
@@ -77,14 +75,10 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
                 if(parentPackage != null && parentPackage.Element.Stereotype == "specif integration")
                 {
-                    string apiURL = parentPackage.Element.GetTaggedValueString("specifApiUrl");
-
                     string projectID = projectPackage.Element.GetTaggedValueString("specifProjectID");
 
-                    if(!string.IsNullOrEmpty(apiURL) && !string.IsNullOrEmpty(projectID))
+                    if(!string.IsNullOrEmpty(projectID))
                     {
-                        
-
                         List<Node> hierarchyRoots = _specIfDataReader.GetAllHierarchyRootNodes(projectID);
 
                         foreach (Node rootNode in hierarchyRoots)
@@ -133,11 +127,9 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
                     if(integrationPackage.Element.Stereotype == "specif integration")
                     {
-                        string apiURL = integrationPackage.Element.GetTaggedValueString("specifApiUrl");
-
                         string hierarchyID = hierarchyPackage.Element.GetTaggedValueString("rootNodeID");
 
-                        if(!string.IsNullOrEmpty(apiURL) && !string.IsNullOrEmpty(hierarchyID))
+                        if(!string.IsNullOrEmpty(hierarchyID))
                         {
                             Node hierarchy = _specIfDataReader.GetHierarchyByKey(new Key(hierarchyID));
 

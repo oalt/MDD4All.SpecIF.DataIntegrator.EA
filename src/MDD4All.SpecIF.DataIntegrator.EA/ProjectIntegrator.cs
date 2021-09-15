@@ -160,7 +160,7 @@ namespace MDD4All.SpecIF.DataIntegrator.EA
 
                     string eaRevision = eaSpecIfElement.GetTaggedValueString("specifRevision");
 
-                    if (eaRevision != resource.Revision)
+                    //if (eaRevision != resource.Revision)
                     {
                         logger.Info("Synchronizing existing resource " + resource.ID);
                         eaSpecIfElement.SetRequirementDataFromSpecIF(resource, _metadataReader);

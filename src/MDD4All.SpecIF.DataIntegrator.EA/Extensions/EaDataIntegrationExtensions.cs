@@ -5,6 +5,8 @@ using MDD4All.EnterpriseArchitect.Manipulations;
 using MDD4All.SpecIF.DataModels;
 using MDD4All.SpecIF.DataModels.Manipulation;
 using MDD4All.SpecIF.DataProvider.Contracts;
+using System;
+using System.Text.RegularExpressions;
 using EAAPI = EA;
 
 namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
@@ -15,13 +17,11 @@ namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
                                                         Resource resource,
                                                         ISpecIfMetadataReader metadataReader)
         {
-            string title = resource.GetPropertyValue("dcterms:title", metadataReader);
+            string title = resource.GetPropertyValue("dcterms:title", metadataReader, "en");
 
-            string description = resource.GetPropertyValue("dcterms:description", metadataReader);
+            string description = resource.GetPropertyValue("dcterms:description", metadataReader, "en");
 
             string identifier = resource.GetPropertyValue("dcterms:identifier", metadataReader);
-
-            
 
             eaRequirement.Name = title;
 
@@ -36,6 +36,12 @@ namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
             eaRequirement.SetTaggedValueString("specifRevision", resource.Revision, false);
 
             eaRequirement.SetTaggedValueString("Identifier", identifier, false);
+
+            string germanTitle = resource.GetPropertyValue("dcterms:title", metadataReader, "de");
+            string germanDescription = resource.GetPropertyValue("dcterms:description", metadataReader, "de");
+
+            eaRequirement.SetTaggedValueString("Second Title", germanTitle, false);
+            eaRequirement.SetTaggedValueString("Second Description", HtmlToPlainText(germanDescription), true);
 
             string perspective = resource.GetPropertyValue("SpecIF:Perspective", metadataReader);
 
@@ -137,6 +143,28 @@ namespace MDD4All.SpecIF.DataIntegrator.EA.Extensions
             packageElement.SetTaggedValueString("rootNodeID", node.ID, false);
 
 
+        }
+
+        private static string HtmlToPlainText(string html)
+        {
+            const string tagWhiteSpace = @"(>|$)(\W|\n|\r)+<";//matches one or more (white space or line breaks) between '>' and '<'
+            const string stripFormatting = @"<[^>]*(>|$)";//match any character between '<' and '>', even when end tag is missing
+            const string lineBreak = @"<(br|BR)\s{0,1}\/{0,1}>";//matches: <br>,<br/>,<br />,<BR>,<BR/>,<BR />
+            var lineBreakRegex = new Regex(lineBreak, RegexOptions.Multiline);
+            var stripFormattingRegex = new Regex(stripFormatting, RegexOptions.Multiline);
+            var tagWhiteSpaceRegex = new Regex(tagWhiteSpace, RegexOptions.Multiline);
+
+            var text = html;
+            //Decode html specific characters
+            text = System.Net.WebUtility.HtmlDecode(text);
+            //Remove tag whitespace/line breaks
+            text = tagWhiteSpaceRegex.Replace(text, "><");
+            //Replace <br /> with line breaks
+            text = lineBreakRegex.Replace(text, Environment.NewLine);
+            //Strip formatting
+            text = stripFormattingRegex.Replace(text, string.Empty);
+
+            return text;
         }
     }
 }

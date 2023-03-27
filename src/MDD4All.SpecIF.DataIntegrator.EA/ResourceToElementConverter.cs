@@ -1,7 +1,4 @@
 ﻿using MDD4All.SpecIF.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using EAAPI = EA;
 using MDD4All.EnterpriseArchitect.Manipulations;
 using MDD4All.SpecIF.DataIntegrator.EA.Extensions;
